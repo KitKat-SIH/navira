@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity, ScrollView, Switch, Image, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useApp } from '../context/AppContext';
+import QRCode from 'react-native-qrcode-svg';
 
 interface ProfileScreenProps {
   navigation: any;
@@ -61,6 +62,16 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
                   </TouchableOpacity>
                 </View>
               </View>
+            </View>
+          </View>
+
+          {/* Digital ID (QR) */}
+          <View>
+            <Text style={styles.sectionLabel}>DIGITAL ID</Text>
+            <View style={[styles.card, { alignItems: 'center', paddingVertical: 24 }]}>
+              <QRCode value={user.digitalId} size={180} color="#000000" backgroundColor="#ffffff" />
+              <Text style={{ marginTop: 12, color: '#1f2937', fontWeight: '700' }}>{user.name}</Text>
+              <Text style={{ marginTop: 4, color: '#6b7280' }}>ID Valid Until: {user.idValidUntil}</Text>
             </View>
           </View>
 

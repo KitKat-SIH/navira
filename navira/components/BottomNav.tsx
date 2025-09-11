@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
-type RouteName = 'Dashboard' | 'Planner' | 'SOS' | 'QRCode' | 'Profile';
+type RouteName = 'Home' | 'Planner' | 'SOS' | 'Itinerary' | 'Profile';
 
 interface BottomNavProps {
   activeRoute?: string;
@@ -16,13 +16,13 @@ export const BottomNav: React.FC<BottomNavProps> = ({ activeRoute, onNavigate })
     <View style={styles.container}>
       {/* Bottom bar */}
       <View style={styles.bar}>
-        <TouchableOpacity style={styles.tab} onPress={() => onNavigate('Dashboard')}>
+        <TouchableOpacity style={styles.tab} onPress={() => onNavigate('Home')}>
           <Ionicons
             name="home"
             size={22}
-            color={isActive('Dashboard') ? '#ef4444' : '#374151'}
+            color={'#374151'}
           />
-          <Text style={styles.label}>Dashboard</Text>
+          <Text style={styles.label}>Home</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.tab} onPress={() => onNavigate('Planner')}>
@@ -37,13 +37,13 @@ export const BottomNav: React.FC<BottomNavProps> = ({ activeRoute, onNavigate })
         {/* Spacer for SOS button */}
         <View style={{ width: 60 }} />
 
-        <TouchableOpacity style={styles.tab} onPress={() => onNavigate('QRCode')}>
+        <TouchableOpacity style={styles.tab} onPress={() => onNavigate('Itinerary')}>
           <Ionicons
-            name="qr-code"
+            name="map"
             size={22}
-            color={isActive('QRCode') ? '#ef4444' : '#374151'}
+            color={isActive('Itinerary') ? '#ef4444' : '#374151'}
           />
-          <Text style={styles.label}>QR Code</Text>
+          <Text style={styles.label}>Itinerary</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.tab} onPress={() => onNavigate('Profile')}>
@@ -60,7 +60,8 @@ export const BottomNav: React.FC<BottomNavProps> = ({ activeRoute, onNavigate })
       <TouchableOpacity
         style={styles.centerSOS}
         activeOpacity={0.85}
-        onPress={() => onNavigate('SOS')}
+        delayLongPress={3000}
+        onLongPress={() => onNavigate('SOS')}
       >
         <View style={styles.centerSOSCircle}>
           <Ionicons name="alert" size={36} color="#ffffff" />

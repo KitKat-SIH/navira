@@ -50,6 +50,7 @@ interface AppContextType {
   setUser: (u: User) => void;
   companions: Companion[];
   emergencyContacts: EmergencyContact[];
+  addEmergencyContact: (c: Omit<EmergencyContact, 'id'>) => EmergencyContact;
   safetyScore: SafetyScore;
   feedItems: FeedItem[];
   liveTracking: boolean;
@@ -161,7 +162,7 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [userState, setUserState] = useState<User>(mockUser);
   const [companions] = useState<Companion[]>(mockCompanions);
-  const [emergencyContacts] = useState<EmergencyContact[]>(mockEmergencyContacts);
+  const [emergencyContacts, setEmergencyContacts] = useState<EmergencyContact[]>(mockEmergencyContacts);
   const [safetyScore, setSafetyScore] = useState<SafetyScore>(mockSafetyScore);
   const [feedItems, setFeedItems] = useState<FeedItem[]>(mockFeedItems);
   const [liveTracking, setLiveTracking] = useState<boolean>(true);
@@ -188,11 +189,18 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     setDataSharing(prev => ({ ...prev, [key]: value }));
   };
 
+  const addEmergencyContact = (contact: Omit<EmergencyContact, 'id'>): EmergencyContact => {
+    const newContact: EmergencyContact = { id: String(Date.now()), ...contact };
+    setEmergencyContacts(prev => [newContact, ...prev]);
+    return newContact;
+  };
+
   const value: AppContextType = {
     user: userState,
     setUser: setUserState,
     companions,
     emergencyContacts,
+    addEmergencyContact,
     safetyScore,
     feedItems,
     liveTracking,

@@ -33,7 +33,7 @@ export const HomeScreen: React.FC<any> = ({ navigation }) => {
     setIsMapFullscreen(!isMapFullscreen);
   };
 
-  const mapHeight = isMapFullscreen ? height : height * 0.4;
+  const mapHeight = isMapFullscreen ? height : height * 0.3;
 
   React.useEffect(() => {
     (async () => {
@@ -52,61 +52,74 @@ export const HomeScreen: React.FC<any> = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      {/* Map Section */}
-      <View style={[styles.mapContainer, { height: mapHeight }]}>
-        <MapView
-          style={styles.map}
-          region={region}
-          showsUserLocation={true}
-          showsMyLocationButton={false}
-        >
-          {/* User Location Marker */}
-          <Marker
-            coordinate={{ latitude: region.latitude, longitude: region.longitude }}
-            title="Your Location"
-            description="Current position"
-          />
-        </MapView>
+      <ScrollView contentContainerStyle={{ paddingBottom: 120 }}>
+        {/* Map Section */}
+        <View style={[styles.mapContainer, { height: mapHeight }]}> 
+          <MapView
+            style={styles.map}
+            region={region}
+            showsUserLocation={true}
+            showsMyLocationButton={false}
+          >
+            {/* User Location Marker */}
+            <Marker
+              coordinate={{ latitude: region.latitude, longitude: region.longitude }}
+              title="Your Location"
+              description="Current position"
+            />
+          </MapView>
 
-        {/* Heatmap Overlay (simulated) */}
-        <View style={styles.heatmapOverlay} />
+          {/* Heatmap Overlay (simulated) */}
+          <View style={styles.heatmapOverlay} />
 
-        {/* Safety Score Widget - moved to left to avoid overlap */}
-        <View style={styles.safetyWidgetLeft}>
-          <SafetyScoreWidget />
+          {/* Safety Score Widget - moved to left to avoid overlap */}
+          <View style={styles.safetyWidgetLeft}>
+            <SafetyScoreWidget />
+          </View>
+
+          {/* Fullscreen Toggle Button */}
+          <TouchableOpacity
+            onPress={toggleMapFullscreen}
+            style={styles.fullscreenButton}
+          >
+            <Ionicons 
+              name={isMapFullscreen ? "contract" : "expand"} 
+              size={24} 
+              color="#374151" 
+            />
+          </TouchableOpacity>
         </View>
 
-        {/* Fullscreen Toggle Button - REMOVED exit button as requested */}
-        <TouchableOpacity
-          onPress={toggleMapFullscreen}
-          style={styles.fullscreenButton}
-        >
-          <Ionicons 
-            name={isMapFullscreen ? "contract" : "expand"} 
-            size={24} 
-            color="#374151" 
-          />
-        </TouchableOpacity>
-      </View>
-
-      {/* Live Feed Section */}
-      <View style={styles.feedContainer}>
-        <Text style={styles.feedTitle}>Live Feed</Text>
-        <ScrollView showsVerticalScrollIndicator={false}>
+        {/* Live Feed Section */}
+        <View style={styles.feedContainer}>
+          <Text style={styles.feedTitle}>Live Feed</Text>
           <View style={styles.feedList}>
             {feedItems.map((item) => (
               <FeedCard key={item.id} item={item} />
             ))}
           </View>
-        </ScrollView>
-      </View>
+        </View>
 
-      {/* Consistent Bottom Navbar */}
+        {/* Dashboard summary below */}
+        <View style={{ paddingHorizontal: 20, paddingBottom: 20 }}>
+          <Text style={styles.feedTitle}>Safety Dashboard</Text>
+          <SafetyScoreWidget size="large" />
+          <View style={{ backgroundColor: '#ffffff', padding: 20, borderRadius: 12, shadowColor: '#000', shadowOpacity: 0.05, shadowRadius: 6, elevation: 2 }}>
+            <Text style={{ fontWeight: '700', color: '#1f2937', marginBottom: 12 }}>Contributing Factors</Text>
+            <Text style={{ color: '#374151', marginBottom: 6 }}>Area Risk: Low</Text>
+            <Text style={{ color: '#374151', marginBottom: 6 }}>Anomalies Detected: None</Text>
+            <Text style={{ color: '#374151' }}>Itinerary Deviation: On Track</Text>
+          </View>
+        </View>
+      </ScrollView>
+
+      {/* Bottom Navbar */}
       {!isMapFullscreen && (
         <BottomNav
-          activeRoute={undefined}
+          activeRoute={'Home'}
           onNavigate={(route) => {
-            if (route === 'SOS') return navigation.navigate('Home');
+            if (route === 'SOS') return; // handled by Tabs handler
+            if (route === 'Home') return navigation.navigate('Home');
             return navigation.navigate('Tabs', { screen: route });
           }}
         />
