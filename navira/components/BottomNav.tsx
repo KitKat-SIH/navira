@@ -13,34 +13,57 @@ export const BottomNav: React.FC<BottomNavProps> = ({ activeRoute, onNavigate })
   const isActive = (name: RouteName) => activeRoute === name;
 
   return (
-    <View style={styles.bar}>
-      <TouchableOpacity style={styles.tab} onPress={() => onNavigate('Dashboard')}>
-        <Ionicons name={isActive('Dashboard') ? 'analytics' : 'analytics-outline'} size={22} color="#374151" />
-        <Text style={styles.label}>Dashboard</Text>
-      </TouchableOpacity>
+    <View style={styles.container}>
+      {/* Bottom bar */}
+      <View style={styles.bar}>
+        <TouchableOpacity style={styles.tab} onPress={() => onNavigate('Dashboard')}>
+          <Ionicons
+            name="home"
+            size={22}
+            color={isActive('Dashboard') ? '#ef4444' : '#374151'}
+          />
+          <Text style={styles.label}>Dashboard</Text>
+        </TouchableOpacity>
 
-      <TouchableOpacity style={styles.tab} onPress={() => onNavigate('Planner')}>
-        <Ionicons name={isActive('Planner') ? 'map' : 'map-outline'} size={22} color="#374151" />
-        <Text style={styles.label}>Planner</Text>
-      </TouchableOpacity>
+        <TouchableOpacity style={styles.tab} onPress={() => onNavigate('Planner')}>
+          <Ionicons
+            name="calendar"
+            size={22}
+            color={isActive('Planner') ? '#ef4444' : '#374151'}
+          />
+          <Text style={styles.label}>Planner</Text>
+        </TouchableOpacity>
 
-      {/* Center spacer for raised SOS */}
-      <View style={{ width: 100 }} />
+        {/* Spacer for SOS button */}
+        <View style={{ width: 60 }} />
 
-      <TouchableOpacity style={styles.tab} onPress={() => onNavigate('QRCode')}>
-        <Ionicons name={isActive('QRCode') ? 'qr-code' : 'qr-code-outline'} size={22} color="#374151" />
-        <Text style={styles.label}>QR Code</Text>
-      </TouchableOpacity>
+        <TouchableOpacity style={styles.tab} onPress={() => onNavigate('QRCode')}>
+          <Ionicons
+            name="qr-code"
+            size={22}
+            color={isActive('QRCode') ? '#ef4444' : '#374151'}
+          />
+          <Text style={styles.label}>QR Code</Text>
+        </TouchableOpacity>
 
-      <TouchableOpacity style={styles.tab} onPress={() => onNavigate('Profile')}>
-        <Ionicons name={isActive('Profile') ? 'person' : 'person-outline'} size={22} color="#374151" />
-        <Text style={styles.label}>Profile</Text>
-      </TouchableOpacity>
+        <TouchableOpacity style={styles.tab} onPress={() => onNavigate('Profile')}>
+          <Ionicons
+            name="person"
+            size={22}
+            color={isActive('Profile') ? '#ef4444' : '#374151'}
+          />
+          <Text style={styles.label}>Profile</Text>
+        </TouchableOpacity>
+      </View>
 
-      {/* Raised SOS button */}
-      <TouchableOpacity style={styles.centerSOS} onPress={() => onNavigate('SOS')} activeOpacity={0.85}>
+      {/* Centered SOS button */}
+      <TouchableOpacity
+        style={styles.centerSOS}
+        activeOpacity={0.85}
+        onPress={() => onNavigate('SOS')}
+      >
         <View style={styles.centerSOSCircle}>
-          <Ionicons name="warning" size={36} color="#ffffff" />
+          <Ionicons name="alert" size={36} color="#ffffff" />
         </View>
       </TouchableOpacity>
     </View>
@@ -48,11 +71,13 @@ export const BottomNav: React.FC<BottomNavProps> = ({ activeRoute, onNavigate })
 };
 
 const styles = StyleSheet.create({
-  bar: {
+  container: {
     position: 'absolute',
     left: 0,
     right: 0,
     bottom: 0,
+  },
+  bar: {
     height: 78,
     flexDirection: 'row',
     alignItems: 'center',
@@ -75,9 +100,8 @@ const styles = StyleSheet.create({
   },
   centerSOS: {
     position: 'absolute',
-    left: '50%',
     bottom: 14,
-    marginLeft: -50,
+    alignSelf: 'center',
     zIndex: 60,
   },
   centerSOSCircle: {
@@ -98,5 +122,3 @@ const styles = StyleSheet.create({
 });
 
 export default BottomNav;
-
-
