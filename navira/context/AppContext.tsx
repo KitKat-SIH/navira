@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import { startLocationSocket, stopLocationSocket } from '../src/lib/locationWS';
 
 // Types
 export interface User {
@@ -51,6 +52,7 @@ interface AppContextType {
   companions: Companion[];
   emergencyContacts: EmergencyContact[];
   addEmergencyContact: (c: Omit<EmergencyContact, 'id'>) => EmergencyContact;
+  removeEmergencyContact: (id: string) => void;
   safetyScore: SafetyScore;
   feedItems: FeedItem[];
   liveTracking: boolean;
@@ -72,7 +74,7 @@ const mockUser: User = {
   id: '1',
   name: 'Rohan Sharma',
   email: 'rohan.sharma@example.com',
-  avatar: 'https://placehold.co/100x100/e2e8f0/333333?text=RS',
+  avatar: '',
   digitalId: 'TouristSafe-Digital-ID-1234567890',
   idValidUntil: '25 Sep 2025',
 };
@@ -94,20 +96,7 @@ const mockCompanions: Companion[] = [
   },
 ];
 
-const mockEmergencyContacts: EmergencyContact[] = [
-  {
-    id: '1',
-    name: 'Priya Sharma',
-    relationship: 'Sister',
-    phone: '+91 98765 43210',
-  },
-  {
-    id: '2',
-    name: 'Amit Singh',
-    relationship: 'Friend',
-    phone: '+91 98765 43211',
-  },
-];
+const mockEmergencyContacts: EmergencyContact[] = [];
 
 const mockSafetyScore: SafetyScore = {
   score: 92,
@@ -173,6 +162,16 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   });
   const [language, setLanguage] = useState<string>('en');
 
+  // Start/stop websocket tracking when liveTracking toggles
+  useEffect(() => {
+    if (liveTracking) {
+      startLocationSocket().catch(() => {});
+    } else {
+      stopLocationSocket().catch(() => {});
+    }
+    return () => { stopLocationSocket().catch(() => {}); };
+  }, [liveTracking]);
+
   const updateSafetyScore = (score: SafetyScore) => {
     setSafetyScore(score);
   };
@@ -195,12 +194,17 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     return newContact;
   };
 
+  const removeEmergencyContact = (id: string) => {
+    setEmergencyContacts(prev => prev.filter(c => c.id !== id));
+  };
+
   const value: AppContextType = {
     user: userState,
     setUser: setUserState,
     companions,
     emergencyContacts,
     addEmergencyContact,
+    removeEmergencyContact,
     safetyScore,
     feedItems,
     liveTracking,

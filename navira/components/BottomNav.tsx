@@ -20,18 +20,18 @@ export const BottomNav: React.FC<BottomNavProps> = ({ activeRoute, onNavigate })
           <Ionicons
             name="home"
             size={22}
-            color={'#374151'}
+            color={isActive('Home') ? '#2563eb' : '#374151'}
           />
-          <Text style={styles.label}>Home</Text>
+          <Text style={[styles.label, isActive('Home') && styles.labelActive]}>Home</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.tab} onPress={() => onNavigate('Planner')}>
           <Ionicons
             name="calendar"
             size={22}
-            color={isActive('Planner') ? '#ef4444' : '#374151'}
+            color={isActive('Planner') ? '#2563eb' : '#374151'}
           />
-          <Text style={styles.label}>Planner</Text>
+          <Text style={[styles.label, isActive('Planner') && styles.labelActive]}>Planner</Text>
         </TouchableOpacity>
 
         {/* Spacer for SOS button */}
@@ -41,18 +41,18 @@ export const BottomNav: React.FC<BottomNavProps> = ({ activeRoute, onNavigate })
           <Ionicons
             name="map"
             size={22}
-            color={isActive('Itinerary') ? '#ef4444' : '#374151'}
+            color={isActive('Itinerary') ? '#2563eb' : '#374151'}
           />
-          <Text style={styles.label}>Itinerary</Text>
+          <Text style={[styles.label, isActive('Itinerary') && styles.labelActive]}>Itinerary</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.tab} onPress={() => onNavigate('Profile')}>
           <Ionicons
             name="person"
             size={22}
-            color={isActive('Profile') ? '#ef4444' : '#374151'}
+            color={isActive('Profile') ? '#2563eb' : '#374151'}
           />
-          <Text style={styles.label}>Profile</Text>
+          <Text style={[styles.label, isActive('Profile') && styles.labelActive]}>Profile</Text>
         </TouchableOpacity>
       </View>
 
@@ -99,6 +99,7 @@ const styles = StyleSheet.create({
     color: '#374151',
     marginTop: 2,
   },
+  labelActive: { color: '#2563eb', fontWeight: '700' },
   centerSOS: {
     position: 'absolute',
     bottom: 14,

@@ -21,6 +21,7 @@ import { DataSharingScreen } from './screens/DataSharingScreen';
 import { OnboardingPhoneScreen } from './screens/OnboardingPhoneScreen';
 import { OnboardingVerifyIdScreen } from './screens/OnboardingVerifyIdScreen';
 import { SOSActivatedScreen } from './screens/SOSActivatedScreen';
+import { IncidentReportScreen } from './screens/IncidentReportScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -45,7 +46,7 @@ function ProfileStack() {
 // Onboarding Stack
 function OnboardingStack({ onComplete }: { onComplete: () => void }) {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Navigator screenOptions={{ headerShown: false, animation: 'none' }}>
       <Stack.Screen name="OnboardingPhone" component={OnboardingPhoneScreen} />
       <Stack.Screen name="OnboardingVerifyId">
         {(props) => (
@@ -99,9 +100,10 @@ function MainTabs({ navigation }: any) {
 // Root stack: Home as default; tabs as secondary views. Back from tab routes returns to Home.
 function RootStack() {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Home">
+    <Stack.Navigator screenOptions={{ headerShown: false, animation: 'none' }} initialRouteName="Home">
       <Stack.Screen name="Home" component={HomeScreen} />
       <Stack.Screen name="SOSActivated" component={SOSActivatedScreen} />
+      <Stack.Screen name="IncidentReport" component={IncidentReportScreen} />
       <Stack.Screen name="Tabs" component={MainTabs} />
     </Stack.Navigator>
   );

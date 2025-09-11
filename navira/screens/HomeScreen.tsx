@@ -8,12 +8,13 @@ import {
   Image,
   StyleSheet
 } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
+import MapView from 'react-native-maps';
 import * as Location from 'expo-location';
 import { Ionicons } from '@expo/vector-icons';
 import { SafetyScoreWidget } from '../components/SafetyScoreWidget';
 import { SOSButton } from '../components/SOSButton';
 import { FeedCard } from '../components/FeedCard';
+import { IncidentReportWidget } from '../components/IncidentReportWidget';
 import { useApp } from '../context/AppContext';
 import BottomNav from '../components/BottomNav';
 
@@ -60,19 +61,11 @@ export const HomeScreen: React.FC<any> = ({ navigation }) => {
             region={region}
             showsUserLocation={true}
             showsMyLocationButton={false}
-          >
-            {/* User Location Marker */}
-            <Marker
-              coordinate={{ latitude: region.latitude, longitude: region.longitude }}
-              title="Your Location"
-              description="Current position"
-            />
-          </MapView>
+          />
 
-          {/* Heatmap Overlay (simulated) */}
-          <View style={styles.heatmapOverlay} />
+          {/* Removed red overlay */}
 
-          {/* Safety Score Widget - moved to left to avoid overlap */}
+          {/* Small Safety Score widget */}
           <View style={styles.safetyWidgetLeft}>
             <SafetyScoreWidget />
           </View>
@@ -100,7 +93,7 @@ export const HomeScreen: React.FC<any> = ({ navigation }) => {
           </View>
         </View>
 
-        {/* Dashboard summary below */}
+        {/* Safety Dashboard summary below */}
         <View style={{ paddingHorizontal: 20, paddingBottom: 20 }}>
           <Text style={styles.feedTitle}>Safety Dashboard</Text>
           <SafetyScoreWidget size="large" />
@@ -112,6 +105,11 @@ export const HomeScreen: React.FC<any> = ({ navigation }) => {
           </View>
         </View>
       </ScrollView>
+
+      {/* Incident Report Widget */}
+      {!isMapFullscreen && (
+        <IncidentReportWidget onPress={() => navigation.navigate('IncidentReport')} />
+      )}
 
       {/* Bottom Navbar */}
       {!isMapFullscreen && (

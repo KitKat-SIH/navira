@@ -1,30 +1,70 @@
 import React from 'react';
 import { TouchableOpacity, Alert, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import * as Location from 'expo-location';
+import Constants from 'expo-constants';
 
-interface SOSButtonProps {
-  onLongPress?: () => void;
-}
+// Helper to read .env or app config
+const getEnv = (key: string): string | undefined => {
+  return Constants?.expoConfig?.extra?.[key];
+};
 
-export const SOSButton: React.FC<SOSButtonProps> = ({ onLongPress }) => {
-  const handleLongPress = () => {
+export const SOSButton: React.FC = () => {
+  const sendSOS = async () => {
+    try {
+      // Ask permission & get current location
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        Alert.alert('Permission denied', 'Location permission is required to send SOS.');
+        return;
+      }
+      const loc = await Location.getCurrentPositionAsync({});
+
+      // Open websocket
+      const wsUrl = getEnv('WS_URL');
+      if (!wsUrl) {
+        Alert.alert('Error', 'WS_URL not configured in app config.');
+        return;
+      }
+      const ws = new WebSocket(wsUrl);
+
+      ws.onopen = () => {
+        const payload = {
+          type: 'sos',
+          encrypted_id: getEnv('ENCRYPTED_ID') || 'unknown',
+          lat: loc.coords.latitude,
+          lon: loc.coords.longitude,
+          accuracy: loc.coords.accuracy,
+          timestamp: new Date().toISOString(),
+        };
+        ws.send(JSON.stringify(payload));
+        ws.close();
+        Alert.alert('🚨 SOS Sent', 'Your location and ID have been shared.');
+      };
+
+      ws.onerror = (err) => {
+        console.warn('SOS WebSocket error', err);
+        Alert.alert('Error', 'Failed to send SOS.');
+      };
+    } catch (e) {
+      console.warn('SOS send failed', e);
+      Alert.alert('Error', 'Unexpected failure while sending SOS.');
+    }
+  };
+
+  const handlePress = () => {
     Alert.alert(
-      'SOS Triggered!',
-      'Emergency services have been notified. Your location and itinerary have been shared with authorities and emergency contacts.',
+      'Confirm SOS',
+      'Emergency services will be notified. Do you want to proceed?',
       [
         { text: 'Cancel', style: 'cancel' },
-        { text: 'Confirm', style: 'destructive' }
+        { text: 'Confirm', style: 'destructive', onPress: sendSOS }
       ]
     );
-    onLongPress?.();
   };
 
   return (
-    <TouchableOpacity
-      onLongPress={handleLongPress}
-      delayLongPress={2000}
-      style={styles.sosButton}
-    >
+    <TouchableOpacity onPress={handlePress} style={styles.sosButton}>
       <Ionicons name="warning" size={40} color="white" />
     </TouchableOpacity>
   );

@@ -25,6 +25,11 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "API_BASE_URL": "http://10.225.103.71:8181",
+      "WS_URL": "ws://10.225.103.71:8765",
+      "LOCATION_INTERVAL_MS": "10000"
     }
   }
 }

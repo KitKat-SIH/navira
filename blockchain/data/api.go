@@ -200,5 +200,5 @@ func main() {
 	http.HandleFunc("/decrypt", decryptHandler)
 
 	fmt.Println("AES API running at http://localhost:8181")
-	log.Fatal(http.ListenAndServe(":8181", nil))
+	log.Fatal(http.ListenAndServe("0.0.0.0:8181", nil))
 }

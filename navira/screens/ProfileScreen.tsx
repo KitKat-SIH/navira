@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, ScrollView, Switch, Image, StyleSheet } from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
 import { Ionicons } from '@expo/vector-icons';
 import { useApp } from '../context/AppContext';
 import QRCode from 'react-native-qrcode-svg';
@@ -17,7 +18,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
   };
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+    <ScrollView style={styles.container} contentContainerStyle={[styles.content, { paddingBottom: 140 }]}>
       {/* Header */}
       <View style={styles.headerRow}>
         <Text style={styles.headerTitle}>Profile & Settings</Text>
@@ -25,7 +26,20 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
 
       {/* Profile Info */}
       <View style={styles.profileInfo}>
-        <Image source={{ uri: user.avatar || 'https://placehold.co/100x100/e2e8f0/333333?text=TS' }} style={styles.avatar} />
+        <Image source={user.avatar ? { uri: user.avatar } : require('../assets/profile.jpg')} style={styles.avatar} />
+        <TouchableOpacity
+          onPress={async () => {
+            const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+            if (status !== 'granted') return;
+            const res = await ImagePicker.launchImageLibraryAsync({ mediaTypes: ImagePicker.MediaTypeOptions.Images, quality: 0.7 });
+            if (!res.canceled && res.assets && res.assets.length > 0) {
+              setUser({ ...user, avatar: res.assets[0].uri });
+            }
+          }}
+          style={{ marginTop: 8, paddingHorizontal: 12, paddingVertical: 6, borderRadius: 8, borderWidth: 1, borderColor: '#d1d5db' }}
+        >
+          <Text style={{ color: '#374151', fontWeight: '700' }}>Upload Photo</Text>
+        </TouchableOpacity>
         <Text style={styles.profileName}>{user.name}</Text>
         <Text style={styles.profileEmail}>{user.email}</Text>
       </View>
